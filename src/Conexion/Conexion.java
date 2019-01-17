@@ -22,7 +22,7 @@ public class Conexion {
         {
             //Class.forName("com.mysql.jdbc.Driver");
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String bd = "controlinventariooriginal";
+            String bd = "remision";
             String servidor = "jdbc:mysql://localhost:3306/"+ bd +"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
      
             String usuarioDB="root";
