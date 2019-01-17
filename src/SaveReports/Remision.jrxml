@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Remision" pageWidth="595" pageHeight="885" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14615f19-95d5-47e2-9024-79946b5aa208">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#C3CFD9">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#C3CFD9">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Productos" uuid="f7de2200-1dc7-490e-8db3-ded21defdb2d">
+		<queryString language="SQL">
+			<![CDATA[SELECT r.id,r.empresa,r.solicitante,r.nombrequienrecibe,r.hora,r.fecha,r.quienentrego,ae.nombre as Articulos,ae.unidades,ae.cajas
+ FROM articulosentregados ae INNER JOIN remisiones r
+ ON ae.idreferencia=r.idreferencia WHERE ae.idreferencia=
+ (SELECT idreferencia
+ FROM articulosentregados
+ ORDER BY idreferencia
+ DESC LIMIT 1);]]>
+		</queryString>
+		<field name="Articulos" class="java.lang.String"/>
+		<field name="unidades" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="cajas" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<queryString>
+		<![CDATA[SELECT `r`.`id`,`r`.`empresa`,`r`.`solicitante`,`r`.`nombrequienrecibe`,`r`.`hora`,`r`.`fecha`,`r`.`quienentrego`,`ae`.`nombre` as Articulos
+ FROM `articulosentregados` ae INNER JOIN `remisiones` r
+ ON ae.`idreferencia`=r.`idreferencia` WHERE ae.`idreferencia`=
+ (SELECT idreferencia
+ FROM articulosentregados
+ ORDER BY idreferencia
+ DESC LIMIT 1);]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empresa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="solicitante" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombrequienrecibe" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora" class="java.sql.Time">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quienentrego" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Articulos" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="118" splitType="Stretch">
+			<staticText>
+				<reportElement x="101" y="10" width="373" height="54" uuid="6562b287-76dc-4e93-9d15-a86bb9d94774"/>
+				<textElement textAlignment="Center">
+					<font size="38" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REMISIÓN]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="447" y="69" width="100" height="20" uuid="ab695a04-5924-4b98-8209-7f1930c1dd5f"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="69" width="346" height="20" uuid="9bd4ce94-11bd-4dae-b412-f1acb2360669"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{empresa}.toString()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="10" width="101" height="108" uuid="78fd168e-870f-4fb9-8f22-1e6ef5c2ef63"/>
+				<imageExpression><![CDATA["C:\\Remision\\src\\SaveReports\\documento.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="525" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="10" y="10" width="537" height="76" uuid="47d30a56-0214-4806-9d19-d9b0944c9b74"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="18" y="56" width="71" height="20" uuid="ec323f89-e4c8-4ead-a6a6-56d543697e26"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitante:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="89" y="56" width="346" height="20" uuid="45ad2ad0-3259-4438-ad3b-59e339bb3f67"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{solicitante}.toString()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="24" width="93" height="20" uuid="4b90851e-96a1-4547-adc0-19fc6f2cdecd"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Num. Remisión:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="111" y="24" width="141" height="20" uuid="c8a12fb2-4978-4fc0-ba2a-9be6cbfd122d"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}.intValue()]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement isPrintRepeatedValues="false" x="10" y="133" width="537" height="380" uuid="04ad2b9c-aa2d-4de6-ab60-fb20a24d341f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="221" y="113" width="126" height="20" uuid="e690a91d-2e09-4f81-989e-0357883ea959"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Articulos Entregados:]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="10" y="133" width="537" height="380" uuid="6c8da421-c445-493f-a338-83dbe126872d"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Productos" uuid="1bbeb489-2ed0-4927-9a8a-77f989c47b2b">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="356" uuid="379bbbe9-5e4a-413f-9f50-18dc9f9f0474">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="356" height="30" uuid="a22b4468-cd22-4f80-96be-294f73fb475e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[NOMBRE DEL PRODUCTO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 1_CH" height="31" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="356" height="20" uuid="a15b54aa-a07b-4151-841a-36f3a7101d06"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{Articulos}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="6cc376ca-31b3-4c5b-a74a-4670ebbeb36a">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="58f09916-f72e-4495-b5c8-cc79a6694a8c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[UNIDADES]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 1_CH" height="31" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="ac481e8f-ecf9-4489-a181-0a49adbf04be"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{unidades}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="d5c94f93-15c6-41a8-be5a-a48afa3256d6">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="15404185-465d-49c0-9141-1ebe8beeb1c1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[CAJAS]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 1_CH" height="31" rowSpan="1"/>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="55324e68-b3bf-49ff-88f0-5c4931c54862"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{cajas}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="74">
+			<staticText>
+				<reportElement x="10" y="52" width="249" height="20" forecolor="#999999" uuid="0d587d48-246d-41eb-9264-5767be9c3793"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Nombre y firma de quien recibe los productos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="10" width="244" height="20" uuid="350966a8-2112-44d4-b1c5-83807063804c"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre y Firma]]></text>
+			</staticText>
+			<line>
+				<reportElement x="10" y="51" width="249" height="1" uuid="5616731e-f4ea-4017-a213-1be73161571d"/>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="50"/>
+	</lastPageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+	<noData>
+		<band height="50"/>
+	</noData>
+</jasperReport>

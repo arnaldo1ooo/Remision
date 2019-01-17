@@ -1,0 +1,453 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Inventario;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Ing.Ivan
+ */
+public class ModificarProducto extends javax.swing.JInternalFrame {
+
+    /**
+     * Creates new form ModificarProducto
+     */
+    public ModificarProducto() {
+        initComponents();
+        setResizable(false);
+        txt_buscar.requestFocus();
+        DesactivarCampos();
+    }
+
+    public void DesactivarCampos() {
+        txtCodigo.setEnabled(false);
+        txtNombre.setEnabled(false);
+        boxEmpresa.setEnabled(false);
+        txtCajas.setEnabled(false);
+        txtUnidades.setEnabled(false);
+        btn_guardar.setEnabled(false);
+        btncancelar.setEnabled(false);
+    }
+
+    //metodo donde crea la tabla de productos 
+    DefaultTableModel m;
+
+    public void TablaProducto(String val) {//Realiza la consulta de los productos que tenemos en la base de datos
+        String titles[] = {"Id", "Empresa", "Nombre Producto", "Cajas", "Unidades"};
+        String reg[] = new String[6];
+        String sentence = "";
+        m = new DefaultTableModel(null, titles);
+
+        Connection con;
+        con = Conexion.Conexion.GetConnection();
+        sentence = "CALL SP_ProductosSel('%" + val + "%')";
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sentence);
+            while (rs.next()) {
+                reg[0] = rs.getString("p.idProductos");
+                reg[1] = rs.getString("e.Nombre");
+                reg[2] = rs.getString("p.Nombre");
+                reg[3] = rs.getString("p.cajas");
+                reg[4] = rs.getString("p.unidades");
+                m.addRow(reg);//agrega el registro a la tabla
+            }
+            TablaSqlProducto.setModel(m);//asigna a la tabla el modelo creado
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+    //metodo donde obtiene los datos de la tabla para despues modificarlos
+    String id_act = "";
+
+    public void Buscar_editar(String val) {
+
+        Connection con;
+        con = Conexion.Conexion.GetConnection();
+        String sentence = "";
+        String idp = "", enom = "", nom = "", caj = "", uni = "";
+        sentence = "CALL SP_ProductosSel('%" + val + "%')";
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sentence);
+            while (rs.next()) {
+                idp = rs.getString("p.idProductos");
+                nom = rs.getString("p.Nombre");
+                enom = rs.getString("e.Nombre");
+                caj = rs.getString("p.Cajas");
+                uni = rs.getString("p.Unidades");
+
+                txtCodigo.setText(idp);
+                txtNombre.setText(nom);
+                boxEmpresa.addItem(enom);
+                txtCajas.setText(caj);
+                txtUnidades.setText(uni);
+
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    //metodo donde llena los capos al seleccionar una fila
+    String action = "Insertar";
+
+    public void seleccionarfilamodificar() {
+        int filasel;
+        String id;
+        try {
+            filasel = TablaSqlProducto.getSelectedRow();
+            if (filasel == -1) {
+                JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna fila", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                txt_buscar.requestFocus();
+            } else {
+                //txtCodigo.setEnabled(true);
+                txtNombre.setEnabled(true);
+                //boxEmpresa.setEnabled(true);
+                txtCajas.setEnabled(true);
+                txtUnidades.setEnabled(true);
+                btn_guardar.setEnabled(true);
+                btncancelar.setEnabled(true);
+
+                txt_buscar.setText("");
+                TablaSqlProducto.setVisible(false);
+                action = "Modificar";
+                m = (DefaultTableModel) TablaSqlProducto.getModel();
+                id = (String) m.getValueAt(filasel, 0);
+                System.out.println("Id mandado para modificar"+id);
+                Buscar_editar(id);
+                TablaProducto("");
+                txt_buscar.requestFocus();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error" + e.getMessage());
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel3 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        txt_buscar = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaSqlProducto = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false; //Disallow the editing of any cell
+            }
+        };
+        btnok = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtCajas = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtUnidades = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btn_guardar = new javax.swing.JButton();
+        btncancelar = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        boxEmpresa = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+
+        setClosable(true);
+        setIconifiable(true);
+        setResizable(true);
+        setTitle("Modicar Productos");
+        setToolTipText("");
+        setPreferredSize(new java.awt.Dimension(1127, 636));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(0, 102, 102), null, new java.awt.Color(0, 0, 0)), "Seleccionar producto para modificar", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Sitka Subheading", 1, 14), new java.awt.Color(0, 0, 153))); // NOI18N
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(0, 153, 204));
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos40x40/40x40-BUSCAR.png"))); // NOI18N
+        jLabel10.setText("  BUSCAR ");
+        jLabel10.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 102, 102)));
+        jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 41, 140, 40));
+
+        txt_buscar.setBackground(new java.awt.Color(0, 0, 0));
+        txt_buscar.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        txt_buscar.setForeground(new java.awt.Color(0, 204, 204));
+        txt_buscar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txt_buscar.setCaretColor(new java.awt.Color(0, 204, 204));
+        txt_buscar.setDisabledTextColor(new java.awt.Color(0, 204, 204));
+        txt_buscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_buscarKeyReleased(evt);
+            }
+        });
+        jPanel3.add(txt_buscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 41, 570, 40));
+
+        TablaSqlProducto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(153, 153, 153), null, new java.awt.Color(102, 102, 102)));
+        TablaSqlProducto.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        TablaSqlProducto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id", "Empresa", "Nombre Producto", "Cajas", "Unidades"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TablaSqlProducto.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        TablaSqlProducto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        TablaSqlProducto.setOpaque(false);
+        TablaSqlProducto.getTableHeader().setReorderingAllowed(false);
+        TablaSqlProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaSqlProductoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaSqlProducto);
+
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 97, 1059, 90));
+
+        btnok.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Inventario/aceptar.png"))); // NOI18N
+        btnok.setToolTipText("Eliminar Fila Seleccionada");
+        btnok.setBorderPainted(false);
+        btnok.setContentAreaFilled(false);
+        btnok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnokActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnok, new org.netbeans.lib.awtextra.AbsoluteConstraints(932, 193, -1, -1));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(0, 102, 102), null, new java.awt.Color(0, 0, 0)), "Modificar datos del producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Serif", 1, 14), new java.awt.Color(0, 0, 153))); // NOI18N
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Sitka Subheading", 1, 16)); // NOI18N
+        jLabel1.setText("Nombre Producto:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 66, -1, -1));
+
+        txtNombre.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 63, 280, -1));
+
+        jLabel2.setFont(new java.awt.Font("Sitka Subheading", 1, 16)); // NOI18N
+        jLabel2.setText("Cajas:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(103, 131, 49, -1));
+
+        txtCajas.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jPanel1.add(txtCajas, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 128, 240, -1));
+
+        jLabel3.setFont(new java.awt.Font("Sitka Subheading", 1, 16)); // NOI18N
+        jLabel3.setText("Unidades:");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(77, 162, -1, -1));
+
+        txtUnidades.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jPanel1.add(txtUnidades, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 159, 240, -1));
+
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Inventario/mayorista.png"))); // NOI18N
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(463, 21, -1, -1));
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Opciones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Serif", 0, 12))); // NOI18N
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos20x20/20x20-Guardar.png"))); // NOI18N
+        btn_guardar.setText("Guardar");
+        btn_guardar.setToolTipText("Guardar Modificaciones");
+        btn_guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_guardarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btn_guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 19, 98, -1));
+
+        btncancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos20x20/20X20-CANCEL.png"))); // NOI18N
+        btncancelar.setText("Cancelar");
+        btncancelar.setToolTipText("Cancelar | Limpiar");
+        btncancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncancelarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btncancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 19, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(159, 202, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Sitka Subheading", 1, 16)); // NOI18N
+        jLabel4.setText("Empresa:");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(77, 97, 75, -1));
+
+        boxEmpresa.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jPanel1.add(boxEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 94, 240, -1));
+
+        jLabel6.setFont(new java.awt.Font("Sitka Subheading", 1, 16)); // NOI18N
+        jLabel6.setText("Codigo:");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(95, 35, -1, -1));
+
+        txtCodigo.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jPanel1.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 32, 150, -1));
+
+        jPanel3.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 225, -1, 272));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 58, 1091, 530));
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Inventario/bannermodproducto.jpg"))); // NOI18N
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
+        //guarda los datos que se han modificado en los campos
+        Connection con;
+        con = Conexion.Conexion.GetConnection();
+        String sentence = "";
+        String msj = "";
+        String cod, nom, emp, caj, uni;
+        cod = txtCodigo.getText();
+        nom = txtNombre.getText();
+        Object combo = boxEmpresa.getSelectedItem();
+        emp = String.valueOf(combo);
+        caj = txtCajas.getText();
+        uni = txtUnidades.getText();
+
+        //si los datos son diferentes de vacios
+        if (!cod.isEmpty() && !nom.isEmpty() && !emp.isEmpty() && !caj.isEmpty() && !uni.isEmpty()) {
+
+            int confirmado = JOptionPane.showConfirmDialog(null, "¿Esta seguro de modificar el producto?", "Confirmación", JOptionPane.YES_OPTION);
+            if (JOptionPane.YES_OPTION == confirmado) {
+
+                sentence = "CALL SP_ProductosUpd(" + cod + ",'" + nom + "'," + caj + "," + uni + ")";
+                getToolkit().beep();
+                JOptionPane.showMessageDialog(null, "Producto modificado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+                try {
+                    PreparedStatement pst = con.prepareStatement(sentence);
+                    pst.executeUpdate();
+
+                    txtCodigo.setText("");
+                    txtNombre.setText("");
+                    boxEmpresa.removeAllItems();
+                    txtCajas.setText("");
+                    txtUnidades.setText("");
+
+                    TablaProducto("");
+                    txtCodigo.setEnabled(false);
+                    txtNombre.setEnabled(false);
+                    boxEmpresa.setEnabled(false);
+                    txtCajas.setEnabled(false);
+                    txtUnidades.setEnabled(false);
+
+                    btn_guardar.setEnabled(false);
+                    btncancelar.setEnabled(false);
+
+                    TablaSqlProducto.setVisible(false);
+                    txt_buscar.setText("");
+                    txt_buscar.requestFocus();
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                txt_buscar.setText("");
+                TablaProducto("");
+                JOptionPane.showMessageDialog(null, "Cancelado correctamente", "Información", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No dejar vacio ningun campo", "Advertencia", JOptionPane.WARNING_MESSAGE);
+
+        }
+    }//GEN-LAST:event_btn_guardarActionPerformed
+    public void Limpiar() {
+        txtCodigo.setText("");
+        txtNombre.setText("");
+        boxEmpresa.removeAllItems();
+        txtCajas.setText("");
+        txtUnidades.setText("");
+        txt_buscar.requestFocus();
+
+        txtCodigo.setEnabled(false);
+        txtNombre.setEnabled(false);
+        boxEmpresa.setEnabled(false);
+        txtCajas.setEnabled(false);
+        txtUnidades.setEnabled(false);
+        btn_guardar.setEnabled(false);
+        btncancelar.setEnabled(false);
+    }
+    private void btncancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarActionPerformed
+        Limpiar();
+    }//GEN-LAST:event_btncancelarActionPerformed
+
+    private void txt_buscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_buscarKeyReleased
+        //actualiza la tabla conforme a la letra que teclea
+        if (txt_buscar.getText().trim().length() >= 1) {
+            String filtro = txt_buscar.getText();
+            TablaProducto(filtro);
+
+            TablaSqlProducto.setVisible(true);
+
+        } else {
+            TablaSqlProducto.setVisible(false);
+        }
+    }//GEN-LAST:event_txt_buscarKeyReleased
+
+    private void TablaSqlProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaSqlProductoMouseClicked
+        if (evt.getClickCount() == 2) {
+            seleccionarfilamodificar();
+        }
+    }//GEN-LAST:event_TablaSqlProductoMouseClicked
+
+    private void btnokActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnokActionPerformed
+        seleccionarfilamodificar();
+    }//GEN-LAST:event_btnokActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaSqlProducto;
+    private javax.swing.JComboBox boxEmpresa;
+    private javax.swing.JButton btn_guardar;
+    private javax.swing.JButton btncancelar;
+    private javax.swing.JButton btnok;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField txtCajas;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtUnidades;
+    private javax.swing.JTextField txt_buscar;
+    // End of variables declaration//GEN-END:variables
+}
